@@ -1,4 +1,5 @@
 import express from 'express';
+import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
 import DarkWAF from './core/waf.js'
 
 const app = express();
@@ -7,12 +8,13 @@ const port = 3000;
 app.use(express.json());
 app.use(DarkWAF);
 
-app.post('/', (req, res) => {
-    res.json({
-        message: "OK"
-    });
-
-});
+app.use('/', createProxyMiddleware({
+    target: 'http://localhost:8080/',
+    changeOrigin: true,
+    on: {
+        proxyReq: fixRequestBody,
+    }
+}));
 
 app.listen(port, () => {
     console.log(`Running at ${port}`);
