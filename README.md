@@ -10,7 +10,7 @@ DarkWAF is a multi-layered Web Application Firewall (WAF) and Reverse Proxy buil
 Below is the current technical implementation status of the gateway's core capabilities.
 
 ### 🟢 Currently Built Features
-- **Deep Packet Inspection (DPI)**: Scans incoming HTTP requests (specifically JSON bodies and URL query parameters). The middleware flattens the request components and leverages the V8 JavaScript engine to execute optimized Regular Expressions. This halts malicious payloads before they can reach the backend routers. Active signatures include:
+- **Deep Packet Inspection (DPI)**: Scans incoming HTTP requests including JSON bodies (both keys and values), URL query parameters, URL paths, and HTTP headers (User-Agent, Cookie, Referer, etc.). The middleware leverages the V8 JavaScript engine to execute optimized Regular Expressions. Active signatures include:
   - SQL Injection (SQLi)
   - Cross-Site Scripting (XSS)
   - Path Traversal & Local File Inclusion (LFI)
@@ -19,17 +19,18 @@ Below is the current technical implementation status of the gateway's core capab
   - Server-Side Template Injection (SSTI)
   - Server-Side Request Forgery (SSRF) / Remote File Inclusion
   - XML External Entity (XXE) Injection
+- **Anomaly Scoring Engine**: Mitigates false positives by evaluating requests holistically. Each signature match contributes a weighted threat score, and requests are only dropped if the total anomaly score exceeds a strict threshold (score >= 5).
+- **Reverse Proxy Routing**: Invisible traffic forwarding to internal upstream applications, ensuring that clients only communicate with the edge WAF and backend services remain completely isolated.
 
 ### 🟡 Planned Features (To Be Built)
 The core dependencies are installed, and the following features are pending full implementation:
-- **Reverse Proxy Routing**: Invisible traffic forwarding to internal upstream applications, ensuring that clients only communicate with the edge WAF and backend services remain completely isolated.
 - **Brute-Force Rate Limiting**: Sliding-window token tracking to mitigate credential stuffing and Layer 7 DoS attacks. It will automatically return an `HTTP 429 Too Many Requests` when thresholds are exceeded.
 - **Dynamic IP Blacklisting**: An in-memory data structure designed to allow manual and API-driven connection dropping of malicious IP addresses at the gateway level.
 - **Behavioral Fingerprinting**: Heuristic analysis designed to drop automated penetration testing scanners and botnets by validating browser-specific telemetry metadata (e.g., `Sec-Fetch-*` HTTP headers).
 - **SIEM Integration**: Structured JSON event logging via Winston, formatted specifically for real-time ingestion into enterprise log management and monitoring systems.
 
 ## Architecture Highlights
-- **Inspection Engine**: Evaluates incoming request streams dynamically. If a signature match is detected, the request lifecycle is immediately terminated, returning a `403 Forbidden` response.
+- **Inspection Engine**: Evaluates incoming request streams dynamically. If the accumulated anomaly score from signature matches exceeds the threshold, the request lifecycle is terminated, returning a `403 Forbidden` response.
 - **Topology**: Adopts an edge gateway deployment model, sitting at the perimeter of the network to shield hidden internal servers and microservices from direct internet exposure.
 
 ## Installation & Deployment
