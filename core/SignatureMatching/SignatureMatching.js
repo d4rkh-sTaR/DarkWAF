@@ -17,10 +17,15 @@ export function inspectData(data, signatures) {
 
     if (typeof data === "object" && data !== null) {
         for (const key of Object.keys(data)) {
-            const rule = inspectData(data[key], signatures);
+            const rule_key = inspectData(key, signatures);
+            const rule_value = inspectData(data[key], signatures);
 
-            if (rule !== null) {
-                return rule;
+            if (rule_key !== null) {
+                return rule_key;
+            }
+
+            if (rule_value !== null) {
+                return rule_value
             }
         }
     }
