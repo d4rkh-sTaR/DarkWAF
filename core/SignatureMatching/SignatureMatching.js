@@ -1,3 +1,5 @@
+import { checkSqli, checkXss } from './LibInjection.js';
+
 export function matchString(value, signatures) {
     let matches = [];
     if (typeof value !== "string") return matches;
@@ -15,7 +17,15 @@ export function inspectData(data, signatures) {
     let allMatches = [];
 
     if (typeof data === "string") {
-        return matchString(data, signatures);
+        if (checkSqli(data)) {
+            allMatches.push({ id: 1, name: 'SQL Injection (LibInjection)', score: 5 });
+        }
+        if (checkXss(data)) {
+            allMatches.push({ id: 2, name: 'Cross-Site Scripting (LibInjection)', score: 5 });
+        }
+        
+        allMatches.push(...matchString(data, signatures));
+        return allMatches;
     }
 
     if (typeof data === "object" && data !== null) {
