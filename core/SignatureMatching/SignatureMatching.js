@@ -1,34 +1,29 @@
 export function matchString(value, signatures) {
-    if (typeof value !== "string") return null;
+    if (typeof value !== "string") return 0;
 
     for (const sig of signatures) {
         if (sig.pattern.test(value)) {
-            return sig.name;
+            return sig.score;
         }
     }
 
-    return null;
+    return 0;
 }
 
 export function inspectData(data, signatures) {
+    let totalScore = 0;
+
     if (typeof data === "string") {
-        return matchString(data, signatures);
+        totalScore += matchString(data, signatures);
+        return totalScore;
     }
 
     if (typeof data === "object" && data !== null) {
         for (const key of Object.keys(data)) {
-            const rule_key = inspectData(key, signatures);
-            const rule_value = inspectData(data[key], signatures);
-
-            if (rule_key !== null) {
-                return rule_key;
-            }
-
-            if (rule_value !== null) {
-                return rule_value
-            }
+            totalScore += inspectData(key, signatures);
+            totalScore += inspectData(data[key], signatures);
         }
     }
 
-    return null;
+    return totalScore;
 }
