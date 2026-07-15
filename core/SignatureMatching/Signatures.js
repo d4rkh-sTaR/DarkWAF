@@ -1,4 +1,5 @@
 let activeSignatures = [
+    { id: 3, name: 'Cross-Site Scripting (XSS)', score: 5, pattern: /(?:<(?:script|img|svg|iframe|body|object|embed|applet|math|meta|link|style)\b.*?(?:\/?>|>))|(?:on[a-z]+\s*=|javascript:|vbscript:|data:text\/(?:html|javascript)|alert\(|prompt\(|confirm\()/i },
     { id: 4, name: 'Path Traversal', score: 5, pattern: /(?:(?:\.|%2e|%252e)(?:\.|%2e|%252e)(?:\/|\\|%2f|%5c|%252f|%255c))|(?:^\/?(?:etc|var|usr|bin|windows|winnt)(?:\/|\\|%2f|%5c|%252f|%255c))/i },
     { id: 5, name: "OS Command Injection", score: 5, pattern: /(?:;|\||&&|`|\$\().*(?:\b(?:cat|ls|pwd|whoami|ping|curl|wget|nc|bash|sh|powershell|cmd)\b)/i },
     { id: 6, name: "NoSQL Injection", score: 5, pattern: /(?:"?\$[a-z]+"?\s*:|\{"\$where"\s*:|"\$gt"\s*:|"\$ne"\s*:|"\$in"\s*:)/i },

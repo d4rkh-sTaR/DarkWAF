@@ -1,4 +1,4 @@
-import { checkSqli, checkXss } from './LibInjection.js';
+import { checkSqli } from './LibInjection.js';
 
 export function matchString(value, signatures) {
     let matches = [];
@@ -19,9 +19,6 @@ export function inspectData(data, signatures) {
     if (typeof data === "string") {
         if (checkSqli(data)) {
             allMatches.push({ id: 1, name: 'SQL Injection (LibInjection)', score: 5 });
-        }
-        if (checkXss(data)) {
-            allMatches.push({ id: 2, name: 'Cross-Site Scripting (LibInjection)', score: 5 });
         }
         
         allMatches.push(...matchString(data, signatures));
