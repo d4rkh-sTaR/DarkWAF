@@ -26,6 +26,8 @@ export default function DarkWAF(req, res, next) {
     if (anomalyScore >= THRESHOLD) {
         console.warn(`[BLOCKED] IP=(${req.ip}) | Score: ${anomalyScore} | Rules: ${triggeredRules.join(', ')}`);
         return res.status(403).send('<pre>Forbidden 403: Security Policy Violation</pre>');
+    } else if (anomalyScore <= THRESHOLD && anomalyScore > 0) {
+        console.warn(`[WARN] IP=(${req.ip}) | Score: ${anomalyScore} | Rules: ${triggeredRules.join(', ')}`);
     }
 
     next();
