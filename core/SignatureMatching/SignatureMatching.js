@@ -1,8 +1,16 @@
 import { checkSqli } from './LibInjection.js';
+import { base64decode } from './utils.js';
 
 export function matchString(value, signatures) {
     let matches = [];
+
     if (typeof value !== "string") return matches;
+
+    let b64decoded = base64decode(value);
+
+    if (b64decoded) {
+        value = b64decoded;
+    }
 
     for (const sig of signatures) {
         if (sig.pattern.test(value)) {
