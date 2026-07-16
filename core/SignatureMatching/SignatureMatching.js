@@ -1,13 +1,16 @@
 import { checkSqli } from './LibInjection.js';
-import { base64decode } from './utils.js';
+import { base64decode, urldecode } from './utils.js';
 
 export function matchString(value, signatures) {
     let matches = [];
 
     if (typeof value !== "string") return matches;
 
-    let b64decoded = base64decode(value);
+    // Decode URL encoding first (handles double/triple encoding too)
+    value = urldecode(value);
 
+    // Then check for base64-encoded payloads within the decoded string
+    let b64decoded = base64decode(value);
     if (b64decoded) {
         value = b64decoded;
     }

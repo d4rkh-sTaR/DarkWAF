@@ -11,3 +11,21 @@ export function base64decode(value) {
         }
     }
 }
+
+export function urldecode(value) {
+    if (typeof value !== 'string') return value;
+
+    let decoded = value;
+    try {
+        // Iteratively decode up to 3 times to catch double/triple encoding
+        for (let i = 0; i < 3; i++) {
+            const next = decodeURIComponent(decoded);
+            if (next === decoded) break;  // Nothing left to decode
+            decoded = next;
+        }
+    } catch (e) {
+        // If decoding fails mid-way (malformed %), return what we have so far
+    }
+
+    return decoded;
+}
