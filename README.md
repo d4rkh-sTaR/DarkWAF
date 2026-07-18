@@ -1,5 +1,10 @@
 # DarkWAF (ExpressJS Security Gateway)
 
+<div align="center">
+  <img src="logo.png" alt="DarkWAF Logo" width="100%"/>
+</div>
+
+
 ## Overview
 DarkWAF is a multi-layered Web Application Firewall (WAF) and Reverse Proxy built on ExpressJS. It is designed to act as a secure edge gateway for backend infrastructure, providing deep packet inspection, anomaly-based threat scoring, multi-layer payload decoding, behavioral fingerprinting, rate limiting, and dynamic IP blacklisting.
 
